@@ -1,3 +1,5 @@
+(function (win,doc) {
+    'use strict';
 /*
 O desafio de hoje será um pequeno projeto: um cronômetro!
 As regras para criação do cronômetro são as seguintes:
@@ -15,3 +17,27 @@ usar o nome que achar melhor, desde que ele seja semântico, ou seja, o nome
 dado ao elemento HTML deve definir o que o elemento é ou o que ele faz.
 */
 // ?
+   var $input = doc.querySelector('[type="text"]');
+   var $start = doc.querySelector('[data-js="start"]');
+   var $stop = doc.querySelector('[data-js="stop"]');
+   var $reset = doc.querySelector('[data-js="reset"]');
+   var $temporizador;
+   function timer() {
+       $input.value ++;
+       $temporizador = setTimeout(timer,1000);
+   }
+   function stop(params) {
+    clearTimeout($temporizador);
+   }
+    $start.addEventListener('click',function(event){
+        timer();
+    },false);
+    $stop.addEventListener('click',function(event){
+        stop();
+    },false);
+    $reset.addEventListener('click',function(event){
+        stop();
+        $input.value = 0;
+    },false);
+
+}(window,document));
