@@ -1,4 +1,6 @@
-/*
+(function (win,doc) {
+    'use strict';
+    /*
 Vamos desenvolver mais um projeto. A ideia é fazer uma mini-calculadora.
 As regras são:
 
@@ -23,3 +25,37 @@ multiplicação (x), então no input deve aparecer "1+2x".
 input;
 - Ao pressionar o botão "CE", o input deve ficar zerado.
 */
+
+    var $input  = doc.querySelector('[type="text"]');
+    var $btnAllNumbers = doc.querySelectorAll('[data-js="number"]');
+    var $btnOperation = doc.querySelectorAll('[data-js="operation"]');
+    var $btnClear = doc.querySelector('[data-js="clear"]');
+    var $btnEqual = doc.querySelector('[data-js="equal"]'); 
+
+
+    Array.prototype.forEach.call($btnAllNumbers, function ($btn) {
+       $btn.addEventListener('click', handleClickNumber, false);
+    });
+    Array.prototype.forEach.call($btnOperation,function($btn) {
+        $btn.addEventListener('click',handleOperation,false);
+    });
+    $btnClear.addEventListener('click',clearOperation,false);
+    $btnEqual.addEventListener('click',equalOperation,false);
+
+    function handleClickNumber() {
+        if($input.value == '0'){
+            $input.value = '';
+        }
+        $input.value += this.textContent;
+    }
+    function handleOperation() {
+        $input.value += this.textContent;
+    }
+    function clearOperation() {
+       $input.value = '0';
+    }
+    function equalOperation() {
+        console.log(this.textContent);
+    }
+
+})(window,document);
