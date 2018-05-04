@@ -1,4 +1,4 @@
-(function (win,doc) {
+(function (win, doc) {
     'use strict';
     /*
 Vamos desenvolver mais um projeto. A ideia é fazer uma mini-calculadora.
@@ -26,36 +26,86 @@ input;
 - Ao pressionar o botão "CE", o input deve ficar zerado.
 */
 
-    var $input  = doc.querySelector('[type="text"]');
+    var $input = doc.querySelector('[type="text"]');
     var $btnAllNumbers = doc.querySelectorAll('[data-js="number"]');
     var $btnOperation = doc.querySelectorAll('[data-js="operation"]');
     var $btnClear = doc.querySelector('[data-js="clear"]');
-    var $btnEqual = doc.querySelector('[data-js="equal"]'); 
+    var $btnEqual = doc.querySelector('[data-js="equal"]');
 
 
     Array.prototype.forEach.call($btnAllNumbers, function ($btn) {
-       $btn.addEventListener('click', handleClickNumber, false);
+        $btn.addEventListener('click', handleClickNumber, false);
     });
-    Array.prototype.forEach.call($btnOperation,function($btn) {
-        $btn.addEventListener('click',handleOperation,false);
+    Array.prototype.forEach.call($btnOperation, function ($btn) {
+        $btn.addEventListener('click', handleOperation, false);
     });
-    $btnClear.addEventListener('click',clearOperation,false);
-    $btnEqual.addEventListener('click',equalOperation,false);
+    $btnClear.addEventListener('click', clearOperation, false);
+    $btnEqual.addEventListener('click', equalOperation, false);
 
     function handleClickNumber() {
-        if($input.value == '0'){
+        if ($input.value == '0') {
             $input.value = '';
         }
         $input.value += this.textContent;
     }
     function handleOperation() {
+        removeLastItemIfisAnOperation();
         $input.value += this.textContent;
     }
     function clearOperation() {
-       $input.value = '0';
+        $input.value = '0';
     }
     function equalOperation() {
-        console.log(this.textContent);
+    
+        removeLastItemIfisAnOperation();
+        var values = $input.value.match(/(?:\d)[\+\x\÷\-]?/g);
+        
+        var finalValue = values.reduce(function (acc, actual) {
+            
+            
+            var firstValue = justNumbers(acc);
+            var secondValue = justNumbers(actual);
+ 
+            var operation = acc.slice(-1);
+            var lastOperation = actual.slice(-1);
+            var calc = 0;
+            
+            if (operation === '+') {
+                calc = Number(firstValue) + Number(secondValue);
+            }
+ 
+            if (operation === '-') {
+                calc = Number(firstValue) - Number(secondValue);
+            }
+
+            if (operation === 'x') {
+                calc = Number(firstValue) * Number(secondValue);
+            }
+
+            if (operation === '÷') {
+                calc = Number(firstValue) / Number(secondValue);
+            }
+
+            return isOperation(lastOperation) ?
+                calc + lastOperation :
+                calc.toString();
+        });
+
+        $input.value = finalValue;
+    }
+    function justNumbers(str) {
+        return str.replace(/\D/, ' ');
     }
 
-})(window,document);
+    function isOperation(char) {
+        return char === '+' || char === '-' || char === 'x' || char === '÷';
+
+    }
+    function removeLastItemIfisAnOperation() {
+        var lastChar = $input.value[$input.value.length - 1];
+        if (isOperation(lastChar)) {
+            $input.value = $input.value
+                .substring(0, $input.value.length - 1);
+        }
+    }
+})(window, document);
